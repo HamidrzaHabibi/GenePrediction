@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gene Prediction & BLAST - Home</title>
+    <!-- Tailwind CSS for rapid, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Custom transitions for smoother UI */
+        .page-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        /* The active page will have this class */
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Specific requirement: Big Title in Layout */
+        .brand-title {
+            font-size: 2.5rem; /* Big text */
+            font-weight: 800;
+            letter-spacing: -0.05em;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                
+                <!-- Brand / Home Link -->
+                <div class="mb-4 md:mb-0 text-center md:text-left cursor-pointer" onclick="navigateTo('home')">
+                    <h1 class="brand-title text-blue-600 leading-none">GENE PREDICTOR</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-widest uppercase mt-1">Augustus + NCBI Pipeline</p>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-6">
+                    <button onclick="navigateTo('home')" class="hover:text-blue-600 font-medium transition">Home</button>
+                    
+                    <!-- PROTECTED LINK: Only shows if logged in -->
+                    <button id="nav-predict-link" onclick="navigateTo('prediction-form')" class="hidden hover:text-blue-600 font-medium transition flex items-center">
+                        <i class="fas fa-dna mr-2"></i> Prediction Tool
+                    </button>
+                    
+                    <!-- Auth Buttons Container -->
+                    <div id="auth-buttons" class="flex items-center space-x-3 ml-4 pl-4 border-l border-gray-200">
+                        <!-- Login/Signup (Shown if NO token) -->
+                        <div id="guest-nav" class="flex space-x-2">
+                            <button onclick="navigateTo('login')" class="text-gray-600 hover:text-blue-600 font-medium px-3 py-2">Log In</button>
+                            <button onclick="navigateTo('signup')" class="bg-blue-600 text-white px-5 py-2 rounded-full font-medium hover:bg-blue-700 transition shadow-sm">Sign Up</button>
+                        </div>
+
+                        <!-- Logout (Shown IF token exists) -->
+                        <div id="user-nav" class="hidden flex items-center space-x-3">
+                            <span class="text-sm text-gray-500">Welcome, Researcher</span>
+                            <button onclick="handleLogout()" class="text-red-500 border border-red-200 bg-red-50 px-4 py-2 rounded-full hover:bg-red-100 transition font-medium">
+                                <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="container mx-auto px-6 py-10 min-h-screen">
+
+        <!-- 1. HOME PAGE -->
+        <section id="home" class="page-section active">
+            <div class="text-center max-w-3xl mx-auto mt-10">
+                <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-microscope text-4xl text-blue-600"></i>
+                </div>
+                <h2 class="text-4xl font-bold mb-4">DNA to Protein Analysis Pipeline</h2>
+                <p class="text-gray-600 mb-8 text-lg">
+                    This tool uses <strong>Augustus</strong> to predict gene structures from your raw DNA sequences, 
+                    then automatically performs a <strong>BLASTP</strong> search against the NCBI database using Biopython.
+                </p>
+                
+                <div id="home-cta-guest">
+                    <p class="mb-4 text-sm text-gray-500">Please log in to access the prediction tools.</p>
+                    <button onclick="navigateTo('login')" class="bg-blue-600 text-white text-lg px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition">
+                        Login to Start
+                    </button>
+                </div>
+
+                <div id="home-cta-user" class="hidden">
+                    <button onclick="navigateTo('prediction-form')" class="bg-green-600 text-white text-lg px-8 py-3 rounded-lg shadow-lg hover:bg-green-700 transition transform hover:-translate-y-1">
+                        <i class="fas fa-flask mr-2"></i> New Prediction
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. LOGIN PAGE -->
+        <section id="login" class="page-section">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                <h2 class="text-2xl font-bold mb-6 text-center">Researcher Login</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                        <input type="text" id="login-username" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" placeholder="your_researcher_id">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <input type="password" id="login-password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" placeholder="••••••••">
+                    </div>
+                    <button type="submit" id="login-btn" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">
+                        Access Pipeline
+                    </button>
+                    <!-- Display login messages here -->
+                    <p id="login-message" class="mt-4 text-center text-sm text-red-500 hidden"></p>
+                </form>
+                <p class="text-center mt-4 text-sm text-gray-500">
+                    New lab member? <a href="#" onclick="navigateTo('signup')" class="text-blue-600 font-bold">Sign up</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. SIGNUP PAGE -->
+        <section id="signup" class="page-section">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                <h2 class="text-2xl font-bold mb-6 text-center">Create Account</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                        <input type="text" id="signup-username" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <input type="password" id="signup-password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <button type="submit" id="signup-btn" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition">
+                        Register
+                    </button>
+                    <p id="signup-message" class="mt-4 text-center text-sm text-red-500 hidden"></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 4. PREDICTION FORM PAGE (DNA INPUT) -->
+        <section id="prediction-form" class="page-section">
+            <div class="max-w-3xl mx-auto">
+                <div id="prediction-alert" class="hidden mb-4 p-4 rounded-lg text-sm border" role="alert"></div>
+
+                <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-blue-600">
+                    <h2 class="text-2xl font-bold mb-2">New Prediction Task</h2>
+                    <p class="text-gray-500 mb-6">Step 1: Upload DNA &rarr; Step 2: Augustus Prediction &rarr; Step 3: NCBI BlastP</p>
+                    
+                    <form onsubmit="handlePrediction(event)">
+                        
+                        <!-- File Upload Option -->
+                        <div class="mb-6 p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg text-center hover:bg-blue-50 transition cursor-pointer relative">
+                            <input type="file" id="fasta-file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileName(this)">
+                            <div class="pointer-events-none">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                <p class="text-sm font-medium text-gray-600" id="file-upload-text">Upload DNA FASTA File</p>
+                                <p class="text-xs text-gray-400 mt-1">.fasta, .fna, .txt</p>
+                            </div>
+                        </div>
+
+                        <div class="relative flex py-2 items-center">
+                            <div class="flex-grow border-t border-gray-300"></div>
+                            <span class="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or paste sequence</span>
+                            <div class="flex-grow border-t border-gray-300"></div>
+                        </div>
+
+                        <!-- Text Input Option -->
+                        <div class="mb-6 mt-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">DNA Sequence (Raw or FASTA)</label>
+                            <textarea id="dna-input" rows="6" class="w-full px-4 py-3 border rounded-lg font-mono text-sm focus:outline-none focus:border-blue-500 bg-gray-50" placeholder=">dna_seq_1&#10;ATGCGTAGCTAGCTAGCT..."></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button type="submit" id="prediction-btn" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition flex items-center">
+                                <i class="fas fa-cogs mr-2"></i> Predict & BLAST
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. RESULT PAGE -->
+        <section id="result-page" class="page-section">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <button onclick="navigateTo('prediction-form')" class="text-blue-600 hover:underline flex items-center">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Prediction
+                    </button>
+                    <div class="text-sm bg-gray-100 px-3 py-1 rounded text-gray-500 font-mono">ID: <span id="result-job-id">N/A</span></div>
+                </div>
+
+                <!-- Status/Error Message Container -->
+                <div id="result-status-message" class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 flex items-start hidden">
+                    <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                    <div>
+                        <h3 class="font-bold text-green-800">Prediction Complete</h3>
+                        <p class="text-green-700 text-sm">Augustus identified gene models. Detailed results below.</p>
+                    </div>
+                </div>
+                
+                <h2 class="text-3xl font-bold mb-4">Predicted Gene Models</h2>
+                <p class="text-gray-500 mb-4 text-sm">Results generated by Augustus based on your sequence input.</p>
+
+                <!-- Dynamic Results Table Container -->
+                <div id="results-container">
+                    <!-- Results will be injected here by JavaScript -->
+                    <div class="p-8 text-center text-gray-500 bg-white rounded-lg shadow">
+                        <i class="fas fa-dna text-3xl mb-3 text-gray-300"></i>
+                        <p>No gene prediction results to display yet.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- API CONFIGURATION ---
+        const BASE_URL = 'http://localhost:8888'; 
+        
+        // --- AUTHENTICATION LOGIC ---
+        function updateNavbarAuth() {
+            const token = localStorage.getItem('token');
+            const guestNav = document.getElementById('guest-nav');
+            const userNav = document.getElementById('user-nav');
+            const predictLink = document.getElementById('nav-predict-link');
+            const homeCtaGuest = document.getElementById('home-cta-guest');
+            const homeCtaUser = document.getElementById('home-cta-user');
+
+            if (token) {
+                if(guestNav) guestNav.style.display = 'none';
+                if(userNav) {
+                    userNav.style.display = 'flex';
+                    userNav.classList.remove('hidden');
+                }
+                if(predictLink) predictLink.classList.remove('hidden');
+                if(homeCtaGuest) homeCtaGuest.classList.add('hidden');
+                if(homeCtaUser) homeCtaUser.classList.remove('hidden');
+
+            } else {
+                if(guestNav) guestNav.style.display = 'flex';
+                if(userNav) userNav.style.display = 'none';
+                if(predictLink) predictLink.classList.add('hidden');
+                if(homeCtaGuest) homeCtaGuest.classList.remove('hidden');
+                if(homeCtaUser) homeCtaUser.classList.add('hidden');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const loginBtn = document.getElementById('login-btn');
+            const messageDisplay = document.getElementById('login-message');
+            
+            messageDisplay.classList.add('hidden');
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Logging In...';
+            loginBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/users/token/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+
+                if (response.ok) { 
+                    const userToken = data.access || data.token;
+                    if (userToken) { 
+                        localStorage.setItem('token', userToken); 
+                        updateNavbarAuth();
+                        navigateTo('prediction-form'); 
+                        messageDisplay.textContent = '';
+                    } else {
+                        throw new Error('Token missing in response');
+                    }
+                } else {
+                    throw new Error(data.detail || 'Login failed.');
+                }
+            } catch (error) {
+                messageDisplay.textContent = error.message || 'Login failed.';
+                messageDisplay.classList.remove('hidden');
+            } finally {
+                loginBtn.innerHTML = 'Access Pipeline';
+                loginBtn.disabled = false;
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const signupBtn = document.getElementById('signup-btn');
+            const messageDisplay = document.getElementById('signup-message');
+
+            signupBtn.disabled = true;
+            signupBtn.innerHTML = 'Creating Account...';
+            messageDisplay.classList.add('hidden');
+
+            try {
+                const response = await fetch(`${BASE_URL}/users/register/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // If backend logs in automatically upon register:
+                    if(data.access) localStorage.setItem('token', data.access);
+                    alert("Account created! Redirecting to login/prediction...");
+                    updateNavbarAuth();
+                    navigateTo('login');
+                } else {
+                    throw new Error(data.message || 'Registration failed');
+                }
+            } catch (error) {
+                messageDisplay.textContent = error.message;
+                messageDisplay.classList.remove('hidden');
+            } finally {
+                signupBtn.disabled = false;
+                signupBtn.innerHTML = 'Register';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            updateNavbarAuth();
+            navigateTo('home');
+        }
+
+        // --- NAVIGATION UTILS ---
+        function navigateTo(pageId) {
+            if (pageId === 'prediction-form' && !localStorage.getItem('token')) {
+                navigateTo('login');
+                return;
+            }
+
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            const selected = document.getElementById(pageId);
+            if (selected) selected.classList.add('active');
+        }
+
+        function readFileContent(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (event) => resolve(event.target.result);
+                reader.onerror = () => resolve(null); 
+                reader.readAsText(file);
+            });
+        }
+
+        function updateFileName(input) {
+            const fileNameDisplay = document.getElementById('file-upload-text');
+            if(input.files && input.files[0]) {
+                fileNameDisplay.textContent = input.files[0].name;
+                fileNameDisplay.classList.add('text-blue-600', 'font-bold');
+            } else {
+                fileNameDisplay.textContent = 'Upload DNA FASTA File';
+                fileNameDisplay.classList.remove('text-blue-600', 'font-bold');
+            }
+        }
+
+        // --- PREDICTION LOGIC ---
+
+        async function handlePrediction(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fasta-file');
+            const textInput = document.getElementById('dna-input').value.trim();
+            const token = localStorage.getItem('token');
+            const predictionBtn = document.getElementById('prediction-btn');
+            const alertDisplay = document.getElementById('prediction-alert');
+
+            alertDisplay.classList.add('hidden');
+
+            if (!token) {
+                navigateTo('login');
+                return;
+            }
+
+            let sequence = textInput;
+            const file = fileInput.files[0];
+
+            if (!sequence && file) {
+                predictionBtn.innerHTML = '<i class="fas fa-file-code fa-spin mr-2"></i> Reading File...';
+                sequence = await readFileContent(file);
+                if (!sequence) {
+                    alertDisplay.textContent = 'Error reading file content.';
+                    alertDisplay.classList.remove('hidden', 'bg-green-100', 'text-green-800');
+                    alertDisplay.classList.add('bg-red-100', 'text-red-800');
+                    predictionBtn.innerHTML = '<i class="fas fa-cogs mr-2"></i> Predict & BLAST';
+                    return;
+                }
+            } else if (!sequence) {
+                alertDisplay.textContent = 'Please provide a DNA sequence.';
+                alertDisplay.classList.remove('hidden', 'bg-green-100', 'text-green-800');
+                alertDisplay.classList.add('bg-red-100', 'text-red-800');
+                return;
+            }
+
+            predictionBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Submitting Job...';
+            predictionBtn.disabled = true;
+
+            try {
+                // IMPORTANT: The backend 'predict_gene' expects PlainTextParser
+                const response = await fetch(`${BASE_URL}/api/predict/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: sequence
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // *** CRITICAL: Get ID from response to fetch results ***
+                    const jobId = data.id || data.job_id;
+
+                    if (jobId) {
+                        // Success! Go to result page and load data
+                        navigateTo('result-page');
+                        fetchPredictionResult(jobId);
+                    } else {
+                        // Fallback if backend hasn't been updated to return 'id' yet
+                        alertDisplay.innerHTML = `
+                            <h3 class="font-bold text-yellow-800">Job Submitted, but ID missing</h3>
+                            <p>Backend did not return a job ID. Ensure views.py returns 'id' in the response.</p>`;
+                        alertDisplay.className = 'mb-4 p-4 rounded-lg text-sm border text-yellow-800 bg-yellow-100 border-yellow-200';
+                        alertDisplay.classList.remove('hidden');
+                    }
+                } else {
+                    throw new Error(data.detail || data.error || 'Submission failed');
+                }
+
+            } catch (error) {
+                console.error("Submission error:", error);
+                alertDisplay.textContent = `Error: ${error.message}`;
+                alertDisplay.className = 'mb-4 p-4 rounded-lg text-sm border text-red-800 bg-red-100 border-red-200';
+                alertDisplay.classList.remove('hidden');
+            } finally {
+                predictionBtn.innerHTML = '<i class="fas fa-cogs mr-2"></i> Predict & BLAST';
+                predictionBtn.disabled = false;
+            }
+        }
+
+        async function fetchPredictionResult(jobId) {
+            
+            const token = localStorage.getItem('token');
+            const container = document.getElementById('results-container');
+            const jobIdDisplay = document.getElementById('result-job-id');
+            const statusMessage = document.getElementById('result-status-message');
+            
+            jobIdDisplay.textContent = jobId;
+            container.innerHTML = '<div class="text-center p-8"><i class="fas fa-spinner fa-spin text-blue-600 text-3xl"></i><p class="mt-2 text-gray-500">Fetching analysis results...</p></div>';
+            statusMessage.classList.add('hidden');
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/result/${jobId}/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error(`Server returned ${response.status}`);
+
+                const data = await response.json();
+                
+                // Determine how to render based on data structure
+                if (data.genes && Array.isArray(data.genes)) {
+                    renderGenePrediction(data);
+                } else if (data.gff_entries) {
+                    renderTableFallback(data.gff_entries, container);
+                } else {
+                    container.innerHTML = '<div class="p-4 bg-yellow-50 texLLt-yellow-700 rounded border border-yellow-200">Data format not recognized (expected "genes" or "gff_entries").</div>';
+                }
+
+            } catch (err) {
+                container.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded border border-red-200">Error loading results: ${err.message}</div>`;
+            }
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderGenePrediction(data) {
+            const container = document.getElementById('results-container');
+            const statusMessage = document.getElementById('result-status-message');
+
+            if (data.status === 'done' && data.genes && data.genes.length > 0) {
+                statusMessage.classList.remove('hidden');
+                statusMessage.innerHTML = `<i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i> 
+                                          <div>
+                                              <h3 class="font-bold text-green-800">Prediction Complete (${data.genes.length} Genes Found)</h3>
+                                              <p class="text-green-700 text-sm">Augustus gene models analyzed.</p>
+                                          </div>`;
+            } else {
+                container.innerHTML = `<div class="p-8 text-center text-gray-500 bg-white rounded-lg shadow border border-yellow-200 bg-yellow-50">
+                                            <i class="fas fa-search-minus text-3xl mb-3 text-yellow-500"></i>
+                                            <h4 class="font-bold text-lg text-yellow-800">No Genes Found</h4>
+                                        </div>`;
+                return;
+            }
+
+            let htmlContent = '';
+            data.genes.forEach((gene, geneIndex) => {
+                htmlContent += `
+                    <div class="bg-white rounded-xl shadow-lg mb-8 border border-gray-100 p-6">
+                        <h3 class="text-xl font-bold text-blue-700 mb-3 flex items-center">
+                            <i class="fas fa-dna mr-2"></i> Gene Model ${geneIndex + 1}: ${gene.gene_id || 'Unknown'} 
+                            <span class="text-sm font-normal ml-4 text-gray-500">(${gene.start} - ${gene.end})</span>
+                        </h3>
+                `;
+
+                if(gene.transcripts) {
+                    gene.transcripts.forEach((transcript, tIndex) => {
+                        htmlContent += `
+                            <div class="mt-4 border-l-4 border-blue-200 pl-4">
+                                <h4 class="text-lg font-semibold text-gray-700 mb-3">Transcript ${tIndex + 1}</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full text-left border border-gray-200 rounded-lg text-sm">
+                                        <thead class="bg-blue-50 text-gray-700">
+                                            <tr>
+                                                <th class="py-2 px-3">Type</th>
+                                                <th class="py-2 px-3">Start</th>
+                                                <th class="py-2 px-3">End</th>
+                                                <th class="py-2 px-3">Length</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                        `;
+                        transcript.features.forEach(feature => {
+                            htmlContent += `
+                                <tr class="border-t border-gray-100 hover:bg-gray-50">
+                                    <td class="py-2 px-3 font-medium">${feature.feature_type}</td>
+                                    <td class="py-2 px-3 font-mono text-gray-600">${feature.start}</td>
+                                    <td class="py-2 px-3 font-mono text-gray-600">${feature.end}</td>
+                                    <td class="py-2 px-3">${(feature.end - feature.start + 1)}</td>
+                                </tr>
+                            `;
+                        });
+                        htmlContent += `</tbody></table></div></div>`;
+                    });
+                }
+                htmlContent += `</div>`;
+            });
+
+            container.innerHTML = htmlContent;
+        }
+
+        function renderTableFallback(gffData, container) {
+            if (!gffData || gffData.length === 0) {
+                container.innerHTML = '<p class="text-center p-4">No prediction data available.</p>';
+                return;
+            }
+            let table = `
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <table class="min-w-full leading-normal">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 uppercase text-xs leading-normal">
+                            <th class="py-3 px-6 text-left">Type</th>
+                            <th class="py-3 px-6 text-left">Start</th>
+                            <th class="py-3 px-6 text-left">End</th>
+                            <th class="py-3 px-6 text-left">Score</th>
+                            <th class="py-3 px-6 text-left">Strand</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 text-sm font-light">`;
+            
+            gffData.forEach(r => {
+                table += `<tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 px-6 text-left font-medium">${r.type || r.feature_type}</td>
+                            <td class="py-3 px-6 text-left font-mono">${r.start}</td>
+                            <td class="py-3 px-6 text-left font-mono">${r.end}</td>
+                            <td class="py-3 px-6 text-left">${r.score || '-'}</td>
+                            <td class="py-3 px-6 text-left">${r.strand || '.'}</td>
+                        </tr>`;
+            });
+            table += '</tbody></table></div>';
+            container.innerHTML = table;
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', updateNavbarAuth);
+
+    </script>
+</body>
+</html>
