@@ -1,0 +1,116 @@
+# This output was generated with AUGUSTUS (version 3.5.0).
+# AUGUSTUS is a gene prediction tool written by M. Stanke (mario.stanke@uni-greifswald.de),
+# O. Keller, S. König, L. Gerischer, L. Romoth, Katharina Hoff, Henry Mehlan and Daniel Honsel.
+# Please cite: Mario Stanke, Mark Diekhans, Robert Baertsch, David Haussler (2008),
+# Using native and syntenically mapped cDNA alignments to improve de novo gene finding
+# Bioinformatics 24: 637-644, doi 10.1093/bioinformatics/btn013
+# No extrinsic information on sequences given.
+# Sources of extrinsic information: M RM 
+# Initializing the parameters using config directory /usr/share/augustus/config/ ...
+# human version. Using default transition matrix.
+# Looks like /tmp/tmp8wcb0fet.fa is in fasta format.
+# We have hints for 0 sequences and for 0 of the sequences in the input set.
+#
+# ----- prediction on sequence number 1 (length = 321367, name = 1265) -----
+#
+# Predicted genes for sequence number 1 on both strands
+# start gene g1
+1265	AUGUSTUS	gene	17701	109467	1	-	.	g1
+1265	AUGUSTUS	transcript	17701	109467	.	-	.	g1.t1
+1265	AUGUSTUS	stop_codon	17701	17703	.	-	0	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	CDS	17701	17784	.	-	0	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	CDS	23573	23660	.	-	1	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	CDS	39218	39375	.	-	0	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	CDS	43169	43337	.	-	1	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	CDS	73899	73990	.	-	0	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	CDS	109203	109256	.	-	0	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	CDS	109378	109467	.	-	0	transcript_id "g1.t1"; gene_id "g1";
+1265	AUGUSTUS	start_codon	109465	109467	.	-	0	transcript_id "g1.t1"; gene_id "g1";
+# protein sequence = [MIILTAISDAGGTGGHDAVSTCALNGDSVRISLELWYTVLAYVRCGTMCLGLRRGWPWGGVHMDMGIGRFDGQSSFSS
+# QQETVREMACLLSGTMDFRHRACFVLSKPDFSTRWPGADAQRPPVLVVVALDSSLPFHFLTTVALVPPPTCVAHLAMHLSSSQLCFLPVVSMKPGSSP
+# ATQSARPPPQLCIKSIPNCTKTLTKEAVFLTQPYPEDELPEVLTPRTVLSRNSDLLHVLTQALSQCRL]
+# Evidence for and against this transcript:
+# % of transcript supported by hints (any source): 0
+# CDS exons: 0/7
+# CDS introns: 0/6
+# 5'UTR exons and introns: 0/0
+# 3'UTR exons and introns: 0/0
+# hint groups fully obeyed: 0
+# incompatible hint groups: 0
+# end gene g1
+###
+# start gene g2
+1265	AUGUSTUS	gene	151100	215751	1	+	.	g2
+1265	AUGUSTUS	transcript	151100	215751	.	+	.	g2.t1
+1265	AUGUSTUS	start_codon	151100	151102	.	+	0	transcript_id "g2.t1"; gene_id "g2";
+1265	AUGUSTUS	CDS	151100	151121	.	+	0	transcript_id "g2.t1"; gene_id "g2";
+1265	AUGUSTUS	CDS	160020	160160	.	+	2	transcript_id "g2.t1"; gene_id "g2";
+1265	AUGUSTUS	CDS	179833	179882	.	+	2	transcript_id "g2.t1"; gene_id "g2";
+1265	AUGUSTUS	CDS	182562	182654	.	+	0	transcript_id "g2.t1"; gene_id "g2";
+1265	AUGUSTUS	CDS	205316	205498	.	+	0	transcript_id "g2.t1"; gene_id "g2";
+1265	AUGUSTUS	CDS	215662	215751	.	+	0	transcript_id "g2.t1"; gene_id "g2";
+1265	AUGUSTUS	stop_codon	215749	215751	.	+	0	transcript_id "g2.t1"; gene_id "g2";
+# protein sequence = [MGFPVPEGELCHFWVRTGDLLDGVGLRQKMAGRDVNLVVRNLKERITVVTSVTACFYREKWIYVHKESTKERHGYCTL
+# GEAFNRLDFSSAIQDIRRFNYVVKQVNNGLTLSDLPLHMLNNILYRFSDGWDIITLGQVTPTLYMLSEDRQLWKKLCQYHFAEKQDSGHPCTAADPDS
+# CFTPVSPQHFIDLFKF]
+# Evidence for and against this transcript:
+# % of transcript supported by hints (any source): 0
+# CDS exons: 0/6
+# CDS introns: 0/5
+# 5'UTR exons and introns: 0/0
+# 3'UTR exons and introns: 0/0
+# hint groups fully obeyed: 0
+# incompatible hint groups: 0
+# end gene g2
+###
+# start gene g3
+1265	AUGUSTUS	gene	229038	291704	1	-	.	g3
+1265	AUGUSTUS	transcript	229038	291704	.	-	.	g3.t1
+1265	AUGUSTUS	stop_codon	229038	229040	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	229038	229154	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	233307	233425	.	-	2	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	236300	236442	.	-	1	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	239350	239691	.	-	1	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	241441	241544	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	249170	249263	.	-	1	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	249810	249898	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	250447	250482	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	250960	251083	.	-	1	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	266764	266864	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	CDS	291597	291704	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+1265	AUGUSTUS	start_codon	291702	291704	.	-	0	transcript_id "g3.t1"; gene_id "g3";
+# protein sequence = [MWKLGRGRVLLDEPPEEEDGLRGGPPPAAAAAAQAQKLQGPDADSDQTPLATVAPAPSPGGTIIQDEPSGTQGRLRWT
+# GFRHVALDSVLVLAEVGVGYPFVALDSVLVCAECAALDSVLVCAECVALDSMLTRAEVGTGSDVWLWIPCWCMLSLTWMSGLGSSTNVFQNGQFLNSF
+# SVFKDKFTVQGASFRGWKEVTSLFNKDDEQHLLERCKSPKSKGTNLRLKEELKAEKKSGFWDNLVLKQNIQSKKPDEIEGWEPPKLALEDISADPEDT
+# VGGHPSWSGWEDDAKGSTKYTSLASSANSSRWSLRAAGRLVSIRRQSKGHLTDSPEEAETLEPAVPLRLRFWGADALRGAQGHVGSLFSGLRPGQLDS
+# LAFLADLMGHRKGLYCSMPAVLLALLREHLTPVATAKKVLLLNGIGRWSLKVHCSVFLRLPESDIRFILEEHILNKGYSNFNSSKC]
+# Evidence for and against this transcript:
+# % of transcript supported by hints (any source): 0
+# CDS exons: 0/11
+# CDS introns: 0/10
+# 5'UTR exons and introns: 0/0
+# 3'UTR exons and introns: 0/0
+# hint groups fully obeyed: 0
+# incompatible hint groups: 0
+# end gene g3
+###
+# start gene g4
+1265	AUGUSTUS	gene	298523	298819	1	+	.	g4
+1265	AUGUSTUS	transcript	298523	298819	.	+	.	g4.t1
+1265	AUGUSTUS	start_codon	298523	298525	.	+	0	transcript_id "g4.t1"; gene_id "g4";
+1265	AUGUSTUS	CDS	298523	298819	.	+	0	transcript_id "g4.t1"; gene_id "g4";
+1265	AUGUSTUS	stop_codon	298817	298819	.	+	0	transcript_id "g4.t1"; gene_id "g4";
+# protein sequence = [MRHKAVETTHNINNTFGQGTADECTVQWWFKKFCKGDKSLEDEEHSGWPSEVDNHQLGAIIKAYPLTSTREVAKELNI
+# DHSVVIQHLKQIGRVKKLNK]
+# Evidence for and against this transcript:
+# % of transcript supported by hints (any source): 0
+# CDS exons: 0/1
+# CDS introns: 0/0
+# 5'UTR exons and introns: 0/0
+# 3'UTR exons and introns: 0/0
+# hint groups fully obeyed: 0
+# incompatible hint groups: 0
+# end gene g4
+###
+# command line:
+# augustus --species=human /tmp/tmp8wcb0fet.fa --outfile=augustus_outputs/prediction_tmp8wcb0fet.fa.gff

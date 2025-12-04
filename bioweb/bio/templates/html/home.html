@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biology Portal - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .dna-background {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #1e40af 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dna-helix {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+        }
+        
+        .dna-strand {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #60a5fa, #3b82f6, #60a5fa);
+            animation: rotate 20s linear infinite;
+        }
+        
+        .dna-strand:nth-child(1) {
+            left: 20%;
+            transform-origin: center;
+        }
+        
+        .dna-strand:nth-child(2) {
+            right: 20%;
+            transform-origin: center;
+            animation-delay: -10s;
+        }
+        
+        .dna-base {
+            position: absolute;
+            width: 20px;
+            height: 3px;
+            background: #60a5fa;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+        
+        .molecule {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="dna-background min-h-full flex items-center justify-center p-4">
+    <div class="dna-helix">
+        <div class="dna-strand"></div>
+        <div class="dna-strand"></div>
+        
+        <!-- DNA bases scattered throughout -->
+        <div class="dna-base" style="top: 10%;"></div>
+        <div class="dna-base" style="top: 25%;"></div>
+        <div class="dna-base" style="top: 40%;"></div>
+        <div class="dna-base" style="top: 55%;"></div>
+        <div class="dna-base" style="top: 70%;"></div>
+        <div class="dna-base" style="top: 85%;"></div>
+        
+        <!-- Floating molecules -->
+        <div class="molecule" style="top: 15%; left: 10%; animation-delay: -1s;"></div>
+        <div class="molecule" style="top: 35%; right: 15%; animation-delay: -3s;"></div>
+        <div class="molecule" style="top: 60%; left: 25%; animation-delay: -2s;"></div>
+        <div class="molecule" style="top: 80%; right: 30%; animation-delay: -4s;"></div>
+    </div>
+
+    <div class="login-card rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Biology Portal</h1>
+            <p class="text-gray-600">Enter your name to access the lab</p>
+        </div>
+
+        <form class="space-y-6" onsubmit="handleLogin(event)">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name
+                </label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    required
+                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-800 placeholder-gray-400"
+                    placeholder="Enter your full name"
+                >
+            </div>
+
+            <button 
+                type="submit" 
+                class="login-btn w-full py-3 px-4 text-white font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+                Enter Lab
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-500">
+                🧬 Exploring the building blocks of life
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('name');
+            const name = nameInput.value.trim();
+            
+            if (name) {
+                // Create success message
+                const card = document.querySelector('.login-card');
+                card.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+                            <svg class="w-10 h-10 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome, ${name}!</h2>
+                        <p class="text-gray-600 mb-6">Access granted to the Biology Lab</p>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <p class="text-blue-800 text-sm">🔬 Ready to explore molecular structures and cellular processes</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f001082036a037',t:'MTc2MDUzODUxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
